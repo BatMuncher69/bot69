@@ -1,10 +1,10 @@
 from datetime import datetime
 from discord import Intents
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from discord import Embed
+from discord import Embed, File
 from discord.ext.commands import Bot as BotBase
 from os.path import exists
-
+from discord.ext.commands import CommandNotFound
 PREFIX = "+"
 OWNER_IDS = [803658998040756245]
 
@@ -44,6 +44,21 @@ class Bot(BotBase):
 	async def on_disconnect(self):
 		print("bot disconncted")
 
+	async def on_error(self, err, *args, **kwargs):
+		if err =="on_command_error":
+			await args[0].send("something went wrong.")
+
+			channel = self.get_channel(798158042767818762)
+			await channel.send("An error has occured.")
+			raise
+
+	async def on_command_error(self, ctx, exc):
+		if isinstance(exc, CommandNotFound):
+			pass
+
+		elif hasattr(exc,"original"):
+			raise exc.original
+
 	async def on_ready(self):
 		if not self.ready:
 			self.ready = True
@@ -62,10 +77,9 @@ class Bot(BotBase):
 				embed.add_field(name=name, value=value, inline=inline)
 			embed.set_author(name="bot69", icon_url=self.guild.icon_url)
 			embed.set_footer(text="This is a footer")
-			embed.set_thumbnail(url=self.guild.icon_url)
-			embed.set_image(url=self.guild.icon_url)
 			await channel.send(embed=embed)
 
+			await channel.send(file=File("./data/images/1.png"))
 
 		else:
 			print("bot reconnected")
