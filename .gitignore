@@ -2,3 +2,5 @@
 *.db-journal
 __pycache__
 lib/bot/token
+venv/
+.vscode/
