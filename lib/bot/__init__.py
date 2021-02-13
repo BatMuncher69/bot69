@@ -1,5 +1,6 @@
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from discord.ext.commands import Bot as BotBase
+from os.path import exists
 
 PREFIX = "+"
 OWNER_IDS = [803658998040756245]
@@ -11,8 +12,14 @@ class Bot(BotBase):
 		self.ready = False
 		self.guild = None
 		self.Scheduler  = AsyncIOScheduler()
+		self.check_token_file()
 
 		super().__init__(command_prefix=PREFIX, owner_ids=OWNER_IDS)
+	
+	@staticmethod
+	def check_token_file():
+		if not exists("./lib/bot/token"):
+			open("./lib/bot/token", "w").close()
 
 	def run(self, version):
 		self.VERSION = version
