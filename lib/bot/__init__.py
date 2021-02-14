@@ -6,7 +6,7 @@ from discord.ext.commands import Bot as BotBase
 from os.path import exists
 from discord.ext.commands import CommandNotFound
 
-from..db import db
+from lib.db import db
 
 PREFIX = "+"
 OWNER_IDS = [803658998040756245]
@@ -20,7 +20,7 @@ class Bot(BotBase):
 		self.scheduler  = AsyncIOScheduler()
 		self.check_token_file()
 
-		db.autosave()
+		db.autosave(self.scheduler)
 		super().__init__(command_prefix=PREFIX, owner_ids=OWNER_IDS, intents=Intents.all(),)
 
 	
@@ -49,8 +49,7 @@ class Bot(BotBase):
 			await args[0].send("something went wrong.")
 
 			channel = self.get_channel(798158042767818762)
-			await channel.send("An error has occured.")
-			raise
+			await channel.send("An error has occured.") 
 
 	async def on_command_error(self, ctx, exc):
 		if isinstance(exc, CommandNotFound):
@@ -90,6 +89,6 @@ class Bot(BotBase):
 		pass
 
 
-bot  =Bot()
+bot = Bot()
 
 

@@ -3,8 +3,8 @@ from sqlite3 import connect
 
 from apscheduler.triggers.cron import CronTrigger
 
-DB_PATH = "./data/db/database.db"
-BUILD_PATH ="./data/db/build.sql"
+DB_PATH = "./data/database/database.db"
+BUILD_PATH ="./lib/db/build.sql"
 
 cxn = connect(DB_PATH, check_same_thread=False)
 cur = cxn.cursor()
@@ -62,7 +62,7 @@ def coloumn(command, *values):
 
 
 def execute(command,*values):
-	cur.execute(command, tuple(vaules))
+	cur.execute(command, tuple(values))
 
 
 def multiexec(command, valueset):
@@ -70,5 +70,5 @@ def multiexec(command, valueset):
 
 
 def scriptexec(path):
-	with open(path, "r", encoding="uft=8") as script:
+	with open(path, "r", encoding="utf=8") as script:
 		cur.executescript(script.read())
