@@ -62,7 +62,7 @@ def coloumn(command, *values):
 
 
 def execute(command,*values):
-	cur.execute(command, tuple(vaules))
+	cur.execute(command, tuple(values))
 
 
 def multiexec(command, valueset):
