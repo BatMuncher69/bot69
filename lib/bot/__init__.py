@@ -1,6 +1,7 @@
 from datetime import datetime
 from discord import Intents
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
 from discord import Embed, File
 from discord.ext.commands import Bot as BotBase
 from os.path import exists
@@ -33,6 +34,10 @@ class Bot(BotBase):
 		print("running bot...")
 		super().run(self.TOKEN, reconnect=True)
 
+	async def print_message(self):
+		channel = self.get_channel(798158042767818762)
+		await channel.send("timed notification")
+
 	async def on_connect(self):
 		print("bot connected")
 
@@ -57,6 +62,7 @@ class Bot(BotBase):
 		if not self.ready:
 			self.ready = True
 			self.guild = self.get_guild(293802705867243520)
+			self.scheduler.add_job(self.print_message, CronTrigger(day_if_the_week=0, hour=12))
 			self.scheduler.start()
 			
 
