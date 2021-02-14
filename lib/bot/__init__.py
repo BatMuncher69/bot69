@@ -90,6 +90,6 @@ class Bot(BotBase):
 		pass
 
 
-bot  =Bot()
+bot = Bot()
 
 
