@@ -1,4 +1,5 @@
 from datetime import datetime
+from glob import glob
 from discord import Intents
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -13,6 +14,8 @@ from lib.db import db
 
 PREFIX = "+"
 OWNER_IDS = [803658998040756245]
+COGS = [path.split("\\")[-1][:-3] for path in glob("./lib/cogs/*.py")]
+
 
 
 class Bot(BotBase):
@@ -25,8 +28,19 @@ class Bot(BotBase):
 		db.autosave(self.scheduler)
 		super().__init__(command_prefix=PREFIX, owner_ids=OWNER_IDS, intents=Intents.all(),)
 
+	def setup(self):
+		for cog in COGS:
+			self.load_extension(f"lib.cogs.{cog}")
+			print(f" {cog} cog loaded")
+
+		print("setup complete")
+		self.setup()
+
 	def run(self, version):
 		self.VERSION = version
+
+		print("runnning setup...")
+		self.setup()
 
 		with open("./lib/bot/token", "r", encoding="utf-8") as tf:
 			self.TOKEN =tf.read()
@@ -34,9 +48,8 @@ class Bot(BotBase):
 		print("running bot...")
 		super().run(self.TOKEN, reconnect=True)
 
-	async def print_message(self):
-		channel = self.get_channel(798158042767818762)
-		await channel.send("timed notification")
+	async def rules_reminder(self):
+		await self.stdout.send("drink milk.")
 
 	async def on_connect(self):
 		print("bot connected")
@@ -48,8 +61,7 @@ class Bot(BotBase):
 		if err =="on_command_error":
 			await args[0].send("something went wrong.")
 
-			channel = self.get_channel(798158042767818762)
-			await channel.send("An error has occured.") 
+			await self.stdout.send("An error has occured.") 
 
 	async def on_command_error(self, ctx, exc):
 		if isinstance(exc, CommandNotFound):
@@ -62,12 +74,12 @@ class Bot(BotBase):
 		if not self.ready:
 			self.ready = True
 			self.guild = self.get_guild(293802705867243520)
-			self.scheduler.add_job(self.print_message, CronTrigger(day_if_the_week=0, hour=12))
+			self.stdout = self.get_channel(798158042767818762)
+			self.scheduler.add_job(self.rules_reminder, CronTrigger(day_of_week=0, hour=12, minute=0, second=0))
 			self.scheduler.start()
 			
-
-			channel = self.get_channel(798158042767818762)
-			await channel.send("fuck you")
+			
+			await self.stdout.send("fuck you")
 
 			embed = Embed(title="fuck you", description="Why are you gae.", 
 				colour=0xFF0000, timestamp=datetime.utcnow())
