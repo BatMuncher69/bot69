@@ -69,18 +69,18 @@ class Bot(BotBase):
 			channel = self.get_channel(798158042767818762)
 			await channel.send("fuck you")
 
-			# embed = Embed(title="fuck you", description="Why are you gae.", 
-			# 	colour=0xFF0000, timestamp=datetime.utcnow())
-			# fields = [("Name", "Value", True),
-			# 		("Another field", "This field", True),
-			# 		("A non-inline field", "This field will appear on its own row.", False)]
-			# for name, value, inline in fields:
-			# 	embed.add_field(name=name, value=value, inline=inline)
-			# embed.set_author(name="bot69", icon_url=self.guild.icon_url)
-			# embed.set_footer(text="This is a footer")
-			# await channel.send(embed=embed)
+			embed = Embed(title="fuck you", description="Why are you gae.", 
+				colour=0xFF0000, timestamp=datetime.utcnow())
+			fields = [("Name", "Value", True),
+					("Another field", "This field", True),
+					("A non-inline field", "This field will appear on its own row.", False)]
+			for name, value, inline in fields:
+				embed.add_field(name=name, value=value, inline=inline)
+			embed.set_author(name="bot69", icon_url=self.guild.icon_url)
+			embed.set_footer(text="This is a footer")
+			await channel.send(embed=embed)
 
-			# await channel.send(file=File("./data/images/1.png"))
+			await channel.send(file=File("./data/images/1.png"))
 			
 			print("bot ready")
 		else:
