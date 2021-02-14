@@ -6,7 +6,7 @@ from discord.ext.commands import Bot as BotBase
 from os.path import exists
 from discord.ext.commands import CommandNotFound
 
-from..db import db
+from lib.db import db
 
 PREFIX = "+"
 OWNER_IDS = [803658998040756245]
@@ -49,8 +49,7 @@ class Bot(BotBase):
 			await args[0].send("something went wrong.")
 
 			channel = self.get_channel(798158042767818762)
-			await channel.send("An error has occured.")
-			raise
+			await channel.send("An error has occured.") 
 
 	async def on_command_error(self, ctx, exc):
 		if isinstance(exc, CommandNotFound):
