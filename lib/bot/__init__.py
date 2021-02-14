@@ -5,6 +5,8 @@ from discord import Embed, File
 from discord.ext.commands import Bot as BotBase
 from os.path import exists
 from discord.ext.commands import CommandNotFound
+from lib.bot.startup import check
+check()
 
 from lib.db import db
 
@@ -18,16 +20,9 @@ class Bot(BotBase):
 		self.ready = False
 		self.guild = None
 		self.scheduler  = AsyncIOScheduler()
-		self.check_token_file()
 
 		db.autosave(self.scheduler)
 		super().__init__(command_prefix=PREFIX, owner_ids=OWNER_IDS, intents=Intents.all(),)
-
-	
-	@staticmethod
-	def check_token_file():
-		if not exists("./lib/bot/token"):
-			open("./lib/bot/token", "w").close()
 
 	def run(self, version):
 		self.VERSION = version
