@@ -20,7 +20,7 @@ class Bot(BotBase):
 		self.scheduler  = AsyncIOScheduler()
 		self.check_token_file()
 
-		db.autosave()
+		db.autosave(self.scheduler)
 		super().__init__(command_prefix=PREFIX, owner_ids=OWNER_IDS, intents=Intents.all(),)
 
 	
