@@ -1,5 +1,7 @@
-from os.path miport isfile
+from os.path import isfile
 from sqlite3 import connect 
+
+from apscheduler.triggers.cron import CronTrigger
 
 DB_PATH = "./data/db/database.db"
 BUILD_PATH ="./data/db/build.sql"
@@ -18,12 +20,16 @@ def with_commit(func):
 
 @with_commit
 def build():
-	if isfile(BUILD_PATH)
+	if isfile(BUILD_PATH):
 		scriptexec(BUILD_PATH)
 
 
-DEF commit():
+def commit():
 	cxn.commit()
+
+
+def autosave(sched):
+	sched.add_job(commit, CronTrigger(second=0))
 
 
 def close():

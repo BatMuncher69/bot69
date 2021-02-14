@@ -5,6 +5,9 @@ from discord import Embed, File
 from discord.ext.commands import Bot as BotBase
 from os.path import exists
 from discord.ext.commands import CommandNotFound
+
+from..db import db
+
 PREFIX = "+"
 OWNER_IDS = [803658998040756245]
 
@@ -14,14 +17,11 @@ class Bot(BotBase):
 		self.PREFIX = PREFIX
 		self.ready = False
 		self.guild = None
-		self.Scheduler  = AsyncIOScheduler()
+		self.scheduler  = AsyncIOScheduler()
 		self.check_token_file()
 
-		super().__init__(
-			command_prefix=PREFIX,
-			owner_ids=OWNER_IDS,
-			intents=Intents.all(),
-		)
+		db.autosave()
+		super().__init__(command_prefix=PREFIX, owner_ids=OWNER_IDS, intents=Intents.all(),)
 
 	
 	@staticmethod
@@ -63,24 +63,26 @@ class Bot(BotBase):
 		if not self.ready:
 			self.ready = True
 			self.guild = self.get_guild(293802705867243520)
-			print("bot ready")
+			self.scheduler.start()
+			
 
 			channel = self.get_channel(798158042767818762)
 			await channel.send("fuck you")
 
-			embed = Embed(title="fuck you", description="Why are you gae.", 
-				colour=0xFF0000, timestamp=datetime.utcnow())
-			fields = [("Name", "Value", True),
-					("Another field", "This field", True),
-					("A non-inline field", "This field will appear on its own row.", False)]
-			for name, value, inline in fields:
-				embed.add_field(name=name, value=value, inline=inline)
-			embed.set_author(name="bot69", icon_url=self.guild.icon_url)
-			embed.set_footer(text="This is a footer")
-			await channel.send(embed=embed)
+			# embed = Embed(title="fuck you", description="Why are you gae.", 
+			# 	colour=0xFF0000, timestamp=datetime.utcnow())
+			# fields = [("Name", "Value", True),
+			# 		("Another field", "This field", True),
+			# 		("A non-inline field", "This field will appear on its own row.", False)]
+			# for name, value, inline in fields:
+			# 	embed.add_field(name=name, value=value, inline=inline)
+			# embed.set_author(name="bot69", icon_url=self.guild.icon_url)
+			# embed.set_footer(text="This is a footer")
+			# await channel.send(embed=embed)
 
-			await channel.send(file=File("./data/images/1.png"))
-
+			# await channel.send(file=File("./data/images/1.png"))
+			
+			print("bot ready")
 		else:
 			print("bot reconnected")
 
