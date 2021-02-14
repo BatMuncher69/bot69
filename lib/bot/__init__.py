@@ -8,13 +8,13 @@ from discord.ext.commands import Bot as BotBase
 from os.path import exists
 from discord.ext.commands import CommandNotFound
 from lib.bot.startup import check
+from os import listdir
 check()
 
 from lib.db import db
 
 PREFIX = "+"
 OWNER_IDS = [803658998040756245]
-COGS = [path.split("\\")[-1][:-3] for path in glob("./lib/cogs/*.py")]
 
 
 
@@ -29,12 +29,12 @@ class Bot(BotBase):
 		super().__init__(command_prefix=PREFIX, owner_ids=OWNER_IDS, intents=Intents.all(),)
 
 	def setup(self):
-		for cog in COGS:
-			self.load_extension(f"lib.cogs.{cog}")
-			print(f" {cog} cog loaded")
+		for cog in listdir("./lib/cogs"):
+			if cog.endswith(".py"):
+				self.load_extension("lib.cogs.{}".format(cog[:-3]))
+				print("Successfully loaded {}".format(cog))
 
 		print("setup complete")
-		self.setup()
 
 	def run(self, version):
 		self.VERSION = version
